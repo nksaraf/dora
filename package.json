@@ -53,5 +53,10 @@
     "web-ext": "^6.4.0",
     "webext-bridge": "^5.0.0",
     "webextension-polyfill": "^0.8.0"
+  },
+  "dependencies": {
+    "clipboardy": "^3.0.0",
+    "hotkeys-js": "^3.8.7",
+    "zustand": "^3.7.1"
   }
 }
