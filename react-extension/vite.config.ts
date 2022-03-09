@@ -1,14 +1,9 @@
 import { dirname, relative } from "path";
 import { defineConfig, UserConfig } from "vite";
-import Vue from "@vitejs/plugin-vue";
-import Icons from "unplugin-icons/vite";
-import IconsResolver from "unplugin-icons/resolver";
-import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
-import WindiCSS from "vite-plugin-windicss";
-import windiConfig from "./windi.config";
 import { r, port, isDev } from "./scripts/utils";
-
+import react from "@vitejs/plugin-react";
+import Icons from "unplugin-icons/vite";
 export const sharedConfig: UserConfig = {
   root: r("src"),
   resolve: {
@@ -20,33 +15,18 @@ export const sharedConfig: UserConfig = {
     __DEVELOPMENT__: isDev,
   },
   plugins: [
-    Vue(),
-
+    // React fast refresh doesn't work, cause injecting of preambleCode into index.html
+    // TODO: fix it
+    react({ fastRefresh: false }),
+    Icons({ compiler: "jsx", jsx: "react" }),
     AutoImport({
       imports: [
-        "vue",
         {
-          "webextension-polyfill": [["*", "browser"]],
+          "webextension-polyfill": [["default", "browser"]],
         },
       ],
       dts: r("src/auto-imports.d.ts"),
     }),
-
-    // https://github.com/antfu/unplugin-vue-components
-    Components({
-      dirs: [r("src/components")],
-      // generate `components.d.ts` for ts support with Volar
-      dts: true,
-      resolvers: [
-        // auto import icons
-        IconsResolver({
-          componentPrefix: "",
-        }),
-      ],
-    }),
-
-    // https://github.com/antfu/unplugin-icons
-    Icons(),
 
     // rewrite assets to use relative path
     {
@@ -62,8 +42,7 @@ export const sharedConfig: UserConfig = {
     },
   ],
   optimizeDeps: {
-    include: ["vue", "@vueuse/core", "webextension-polyfill"],
-    exclude: ["vue-demi"],
+    include: ["webextension-polyfill"],
   },
 };
 
@@ -92,12 +71,5 @@ export default defineConfig(({ command }) => ({
       },
     },
   },
-  plugins: [
-    ...sharedConfig.plugins!,
-
-    // https://github.com/antfu/vite-plugin-windicss
-    WindiCSS({
-      config: windiConfig,
-    }),
-  ],
+  plugins: [...sharedConfig.plugins!],
 }));
