@@ -9,12 +9,11 @@
     "incremental": false,
     "skipLibCheck": true,
     "moduleResolution": "node",
+    "jsx": "react",
     "resolveJsonModule": true,
     "noUnusedLocals": true,
     "forceConsistentCasingInFileNames": true,
-    "types": [
-      "vite/client"
-    ],
+    "types": ["vite/client"],
     "paths": {
       "~/*": ["src/*"]
     }
